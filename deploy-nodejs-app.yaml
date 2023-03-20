@@ -1,0 +1,31 @@
+---
+- name: Install node.js and npm
+  hosts: ubuntu
+  become: yes
+  tasks:
+  - name: Update apt repo and cache 
+    apt:
+      update_cache: true
+      force_apt_get: true
+  - name: Install node.js and npm
+    apt:
+      pkg:
+      - nodejs
+      - npm
+
+- name: Deploy nodejs application
+  hosts: ubuntu
+  become: yes
+  tasks:
+  - name: Copy nodejs artifacts to the remote server
+    copy:
+      src: ./simple-nodejs.tar.gz
+      dest: /opt/simple-nodejs.tar.gz  
+  - name: Unpacked the nodejs tar file 
+    unarchive:
+      src: /opt/simple-nodejs.tar.gz
+      dest: /opt/
+      remote_src: yes
+       
+  
+
