@@ -7,6 +7,7 @@
     apt:
       update_cache: true
       force_apt_get: true
+      cache_valid_time: 3600
   - name: Install node.js and npm
     apt:
       pkg:
@@ -16,16 +17,12 @@
 - name: Deploy nodejs application
   hosts: ubuntu
   become: yes
-  tasks:
-  - name: Copy nodejs artifacts to the remote server
-    copy:
-      src: ./simple-nodejs.tar.gz
-      dest: /opt/simple-nodejs.tar.gz  
+  tasks:  
   - name: Unpacked the nodejs tar file 
     unarchive:
-      src: /opt/simple-nodejs.tar.gz
+      src: ./simple-nodejs.tar.gz
       dest: /opt/
-      remote_src: yes
+
        
   
 
