@@ -32,7 +32,13 @@
     async: 100
     poll: 0
   - name: Ensure application is running
-     
+    shell: ps aux | grep node 
+    register: app_status
+  - name: Print application status
+    debug: msg={{ app_status.stdout_lines }}
+
+
+
 
 
 
