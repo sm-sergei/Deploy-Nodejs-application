@@ -14,36 +14,39 @@
       - nodejs
       - npm
 
+- name: Create new group and user nodejs
+  hosts: ubuntu
+  become: yes
+  tasks:
+  - name: Create group nodejs 
+    group:
+      name: nodejs 
+  - name: Create linux user
+    user:
+      name: nodejs
+      comment: User for nodejs application
+      group: nodejs
+  
 - name: Deploy nodejs application
   hosts: ubuntu
   become: yes
+  become_user: nodejs
   tasks:  
   - name: Unpacked the nodejs tar file 
     unarchive:
       src: ./simple-nodejs.tar.gz
-      dest: /opt/
+      dest: /home/nodejs
   - name: Install dependencies
     npm:
-      path: /opt/simple-nodejs
+      path: /home/nodejs/simple-nodejs
   - name: Start the application
     command:
-      chdir: /opt/simple-nodejs/app
+      chdir: /home/nodejs/simple-nodejs/app
       cmd: node server
     async: 100
     poll: 0
   - name: Ensure application is running
-    shell: ps aux | grep node 
+    shell: ps aux | grep 'node server' 
     register: app_status
   - name: Print application status
     debug: msg={{ app_status.stdout_lines }}
-
-
-
-
-
-
-
- 
-       
-  
-
