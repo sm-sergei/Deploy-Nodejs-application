@@ -26,7 +26,6 @@
       name: nodejs
       comment: User for nodejs application
       group: nodejs
-
   
 - name: Deploy nodejs application
   hosts: ubuntu
