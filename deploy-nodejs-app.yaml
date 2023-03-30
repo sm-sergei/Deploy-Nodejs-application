@@ -31,7 +31,7 @@
   become: yes
   become_user: nodejs
   vars:
-   - location: .
+   - location: /home/sergei/project
    - version: 1.0.0
    - destination: /home/nodejs
   tasks:  
