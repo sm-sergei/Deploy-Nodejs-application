@@ -3,50 +3,53 @@
   hosts: ubuntu
   become: yes
   tasks:
-  - name: Update apt repo and cache 
-    apt:
-      update_cache: true
-      force_apt_get: true
-      cache_valid_time: 3600
-  - name: Install node.js and npm
-    apt:
-      pkg:
-      - nodejs
-      - npm
+   - name: Update apt repo and cache 
+     apt:
+       update_cache: true
+       force_apt_get: true
+       cache_valid_time: 3600
+   - name: Install node.js and npm
+     apt:
+       pkg:
+        - nodejs
+        - npm
 
 - name: Create new group and user nodejs
   hosts: ubuntu
   become: yes
   tasks:
-  - name: Create group nodejs 
-    group:
-      name: nodejs 
-  - name: Create linux user
-    user:
-      name: nodejs
-      comment: User for nodejs application
-      group: nodejs
-  
+   - name: Create group nodejs 
+     group:
+       name: nodejs 
+   - name: Create linux user
+     user:
+       name: nodejs
+       comment: User for nodejs application
+       group: nodejs
 - name: Deploy nodejs application
   hosts: ubuntu
   become: yes
   become_user: nodejs
+  vars:
+   - location: .
+   - version: 1.0.0
+   - destination: /home/nodejs
   tasks:  
-  - name: Unpacked the nodejs tar file 
-    unarchive:
-      src: ./simple-nodejs.tar.gz
-      dest: /home/nodejs
-  - name: Install dependencies
-    npm:
-      path: /home/nodejs/simple-nodejs
-  - name: Start the application
-    command:
-      chdir: /home/nodejs/simple-nodejs/app
-      cmd: node server
-    async: 100
-    poll: 0
-  - name: Ensure application is running
-    shell: ps aux | grep 'node server' 
-    register: app_status
-  - name: Print application status
-    debug: msg={{ app_status.stdout_lines }}
+   - name: Unpacked the nodejs tar file 
+     unarchive:
+       src: "{{location}}/simple-nodejs-{{version}}.tar.gz"
+       dest: "{{destination}}"
+   - name: Install dependencies
+     npm:
+       path: "{{destination}}/simple-nodejs"
+   - name: Start the application
+     command:
+       chdir: "{{destination}}simple-nodejs/app"
+       cmd: node server
+     async: 100
+     poll: 0
+   - name: Ensure application is running
+     shell: ps aux | grep 'node server' 
+     register: app_status
+   - name: Print application status
+     debug: msg={{ app_status.stdout_lines }}
