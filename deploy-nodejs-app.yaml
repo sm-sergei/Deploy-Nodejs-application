@@ -33,18 +33,18 @@
   vars:
    - location: /home/sergei/project
    - version: 1.0.0
-   - destination: /home/nodejs
+   - user_home_dir: /home/nodejs
   tasks:  
    - name: Unpacked the nodejs tar file 
      unarchive:
        src: "{{location}}/simple-nodejs-{{version}}.tar.gz"
-       dest: "{{destination}}"
+       dest: "{{user_home_dir}}"
    - name: Install dependencies
      npm:
-       path: "{{destination}}/simple-nodejs"
+       path: "{{user_home_dir}}/simple-nodejs"
    - name: Start the application
      command:
-       chdir: "{{destination}}simple-nodejs/app"
+       chdir: "{{user_home_dir}}simple-nodejs/app"
        cmd: node server
      async: 100
      poll: 0
