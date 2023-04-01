@@ -1,0 +1,4 @@
+version: 1.0.0
+user_name: nodejs
+location: /home/sergei/project
+user_home_dir: /home/{{user_name}}

@@ -17,34 +17,35 @@
 - name: Create new group and user nodejs
   hosts: ubuntu
   become: yes
+  vars_files:
+   - project-vars.yaml
   tasks:
    - name: Create group nodejs 
      group:
        name: nodejs 
    - name: Create linux user
      user:
-       name: nodejs
+       name: "{{user_name}}"
        comment: User for nodejs application
        group: nodejs
+
 - name: Deploy nodejs application
   hosts: ubuntu
   become: yes
-  become_user: nodejs
-  vars:
-   - location: /home/sergei/project
-   - version: 1.0.0
-   - destination: /home/nodejs
+  become_user: "{{user_name}}"
+  vars_files: 
+   - project-vars.yaml
   tasks:  
    - name: Unpacked the nodejs tar file 
      unarchive:
        src: "{{location}}/simple-nodejs-{{version}}.tar.gz"
-       dest: "{{destination}}"
+       dest: "{{user_home_dir}}"
    - name: Install dependencies
      npm:
-       path: "{{destination}}/simple-nodejs"
+       path: "{{user_home_dir}}/simple-nodejs"
    - name: Start the application
      command:
-       chdir: "{{destination}}simple-nodejs/app"
+       chdir: "{{user_home_dir}}/simple-nodejs/app"
        cmd: node server
      async: 100
      poll: 0
