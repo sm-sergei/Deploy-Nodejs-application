@@ -44,7 +44,7 @@
        path: "{{user_home_dir}}/simple-nodejs"
    - name: Start the application
      command:
-       chdir: "{{user_home_dir}}simple-nodejs/app"
+       chdir: "{{user_home_dir}}/simple-nodejs/app"
        cmd: node server
      async: 100
      poll: 0
