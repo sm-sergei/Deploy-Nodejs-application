@@ -17,23 +17,24 @@
 - name: Create new group and user nodejs
   hosts: ubuntu
   become: yes
+  vars_files:
+   - project-vars.yaml
   tasks:
    - name: Create group nodejs 
      group:
        name: nodejs 
    - name: Create linux user
      user:
-       name: nodejs
+       name: "{{user_name}}"
        comment: User for nodejs application
        group: nodejs
+
 - name: Deploy nodejs application
   hosts: ubuntu
   become: yes
-  become_user: nodejs
-  vars:
-   - location: /home/sergei/project
-   - version: 1.0.0
-   - user_home_dir: /home/nodejs
+  become_user: "{{user_name}}"
+  vars_files: 
+   - project-vars.yaml
   tasks:  
    - name: Unpacked the nodejs tar file 
      unarchive:
